@@ -1,0 +1,80 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { type CollectionEntry } from 'astro:content';
+
+interface Props {
+  entry: CollectionEntry<'pages'>;
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+
+const { title, description, thumbnail } = entry.data;
+
+// Porting the form HTML.
+// Using standard Netlify form submission (no JS hijack required for basic functionality).
+---
+
+<Layout title={title} description={description}>
+  <article class="contact-form page-template">
+    {thumbnail && (
+      <div class="post-content-image">
+        <img src={thumbnail} class="kg-image" alt={title} />
+      </div>
+    )}
+
+    <div class="post-content-body">
+      <Content />
+
+      <h3 id="forms">Form</h3>
+      <form name="contact" method="POST" data-netlify="true" action="/contact/thanks">
+        <input type="hidden" name="form-name" value="contact" />
+        <p hidden>
+           <label>Don’t fill this out: <input name="bot-field" /></label>
+        </p>
+
+        <div class="row gtr-uniform">
+          <div class="col-6 col-12-xsmall">
+            <input type="text" name="first-name" id="first-name" placeholder="First Name" required />
+          </div>
+          <div class="col-6 col-12-xsmall">
+            <input type="text" name="last-name" id="last-name" placeholder="Last Name" required />
+          </div>
+
+          <div class="col-6 col-12-xsmall">
+            <input type="email" name="email" id="demo-email" placeholder="Email" required />
+          </div>
+          <div class="col-6 col-12-xsmall">
+            <input type="text" name="location" id="location" placeholder="Location" required />
+          </div>
+
+          <div class="col-12">
+            <select name="category" id="category" required>
+              <option value="">-Nature of Enquiry-</option>
+              <option value="General">General</option>
+              <option value="Purchase">Purchase</option>
+              <option value="Commissions">Commissions</option>
+              <option value="Exhibitions">Exhibitions</option>
+              <option value="Gallery Feature">Gallery Feature</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="col-12">
+            <textarea name="message" id="message" placeholder="Enter your message" rows="6" required></textarea>
+          </div>
+
+          <div data-netlify-recaptcha="true"></div>
+
+          <div class="col-12">
+            <ul class="actions">
+              <li>
+                <input type="submit" value="Send Message" class="primary" />
+              </li>
+            </ul>
+          </div>
+        </div>
+      </form>
+    </div>
+  </article>
+</Layout>

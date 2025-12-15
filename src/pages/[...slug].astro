@@ -1,0 +1,63 @@
+---
+import { getCollection } from 'astro:content';
+import Page from '../templates/Page.astro';
+import Contact from '../templates/Contact.astro';
+import List from '../templates/List.astro';
+// import Elements from '../templates/Elements.astro';
+
+export async function getStaticPaths() {
+  const pages = await getCollection('pages');
+
+  // Pre-fetch other collections for index pages
+  const newsEntries = await getCollection('news');
+  const workEntries = await getCollection('work');
+  const soldEntries = await getCollection('sold');
+
+  // Sort them
+  const sortDate = (a, b) => new Date(b.data.date || 0).getTime() - new Date(a.data.date || 0).getTime();
+  const sortedNews = newsEntries.sort(sortDate);
+  const sortedWork = workEntries.sort(sortDate);
+  const sortedSold = soldEntries.sort(sortDate);
+
+  return pages.map(entry => {
+    // Determine props based on templateKey
+    let props = { entry };
+    let items = [];
+    let baseSlug = '';
+
+    if (entry.data.templateKey === 'news-page') {
+        items = sortedNews;
+        baseSlug = 'news';
+    } else if (entry.data.templateKey === 'work-page') {
+        items = sortedWork;
+        baseSlug = 'work';
+    } else if (entry.data.templateKey === 'exhibitions-page') { // maps to sold collection
+        items = sortedSold;
+        baseSlug = 'sold';
+    }
+
+    return {
+      params: { slug: entry.slug === 'index' ? undefined : entry.slug },
+      // If slug is 'index', it creates undefined path, which matches root '/'.
+      // BUT we have src/pages/index.astro, which takes precedence.
+      // So this route will NOT handle root.
+      // Wait, getStaticPaths params: { slug: undefined } works for [...slug] to match root?
+      // Yes, but index.astro (file) > [...slug].astro (dynamic).
+      // So it's safe.
+      // For 'bio', slug is 'bio'.
+      props: { ...props, items, baseSlug },
+    };
+  });
+}
+
+const { entry, items, baseSlug } = Astro.props;
+const templateKey = entry.data.templateKey;
+---
+
+{templateKey === 'contact-page' ? (
+    <Contact entry={entry} />
+) : templateKey === 'news-page' || templateKey === 'work-page' || templateKey === 'exhibitions-page' ? (
+    <List entry={entry} items={items} baseSlug={baseSlug} />
+) : (
+    <Page entry={entry} />
+)}

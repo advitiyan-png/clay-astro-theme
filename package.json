@@ -1,0 +1,23 @@
+{
+  "name": "super-spiral",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/react": "^4.4.2",
+    "@astrojs/sitemap": "^3.6.0",
+    "astro": "^5.16.5",
+    "autoprefixer": "^10.4.23",
+    "postcss": "^8.5.6",
+    "postcss-color-function": "^4.1.0",
+    "postcss-custom-properties": "^14.0.6",
+    "postcss-easy-import": "^4.0.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
+  }
+}

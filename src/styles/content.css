@@ -1,0 +1,351 @@
+/*
+
+This is a development CSS file which is built to a minified
+production stylesheet in assets/built/screen.css using gulp dev
+
+*/
+
+/* Lib - Local component imports
+/* ---------------------------------------------------------- */
+@import "vars.css";
+@import "components/global.css";
+@import "components/ghost.css";
+@import "components/lists.css";
+@import "components/grid.css";
+@import "components/tables.css";
+@import "components/forms.css";
+@import "components/buttons.css";
+@import "components/actions.css";
+@import "components/hamburger.css";
+@import "components/animations.css";
+
+/* Main - Theme styles
+/* ---------------------------------------------------------- */
+
+
+
+/* Layout
+/* ---------------------------------------------------------- */
+
+
+.page-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 13vw 0;
+  max-width: 70%;
+  margin: auto;
+  text-align: center;
+}
+
+.error-head {
+  height: 75vh;
+}
+
+.error-head h1 {
+  margin: 0;
+  font-size: 7rem;
+  line-height: 1.1em;
+  font-weight: var(--font-heavy);
+  letter-spacing: 10px;
+}
+
+.error-head p {
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: color(var(--color-base) l(+50%));
+}
+
+.error-link {
+  margin-top: 1rem;
+  font-size: 1.5rem;
+  text-decoration: underline;
+}
+
+.page-head-title {
+  margin: 0;
+  font-size: 4.2rem;
+  color: var(--color-base);
+}
+@media (max-width: 500px) {
+  .page-head-title {
+    font-size: 2rem;
+  }
+}
+
+.page-head-description {
+  margin: 0 0 1.6vw;
+  color: color(var(--color-border) l(-20%));
+  font-size: 2.2rem;
+  line-height: 1.35em;
+}
+@media (max-width: 500px) {
+  .page-head-description {
+    font-size: 1.6rem;
+  }
+}
+
+
+
+/* Site Navigation
+/* ---------------------------------------------------------- */
+
+
+
+/* Post Feed
+/* ---------------------------------------------------------- */
+
+
+
+/* Post Content
+/* ---------------------------------------------------------- */
+
+.post-content {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 3vw 0;
+}
+
+.contact-form {
+  max-width: 720px;
+  margin: 0 auto;
+  /* padding: 3vw 0; */
+}
+.post-content-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.post-content-title {
+  margin: 0 0 3vw;
+  color: var(--color-base);
+  text-align: center;
+}
+
+.post-content-excerpt {
+  margin: -2vw 0 3vw;
+  font-size: 2.2rem;
+  line-height: 1.6em;
+  color: var(--color-base);
+  text-align: center;
+  opacity: 0.5;
+}
+@media (max-width: 500px) {
+  .post-content-excerpt {
+    font-size: 1.8rem;
+  }
+}
+
+.post-content-image {
+  margin: 4vw 0;
+  position: relative;
+  width: 75vw;
+  min-width: 100%;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  transform: translateX(calc(50vw - 50%));
+}
+
+.contact-form-image {
+  margin: 2vw 0;
+  position: relative;
+  width: 100vw;
+  min-width: 100%;
+  min-width: 100%;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  transform: translateX(calc(50vw - 50%));
+}
+.post-content-body {
+  font-size: 1.9rem;
+  line-height: 1.65em;
+}
+@media (max-width: 500px) {
+  .post-content-body {
+    font-size: 1.7rem;
+  }
+}
+
+.post-content-body h1,
+.post-content-body h2,
+.post-content-body h3,
+.post-content-body h4,
+.post-content-body h5,
+.post-content-body h6 {
+  color: var(--color-base);
+}
+
+.post-content-body li {
+  word-break: break-word;
+}
+
+.post-content-body li p {
+  margin: 0;
+}
+
+.post-content-body iframe {
+  margin: 0 auto !important;
+}
+
+.post-content-body blockquote {
+  margin: 0 0 1.5em;
+  padding: 0 1.5em;
+  border-left: #000 3px solid;
+}
+
+.post-content-body blockquote p {
+  margin: 0 0 1em 0;
+  color: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  font-style: italic;
+}
+
+.post-content-body blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.post-content-body code {
+  padding: 0 5px 2px;
+  font-size: 0.8em;
+  line-height: 1em;
+  font-weight: 400 !important;
+  background: var(--color-bg);
+  border-radius: 3px;
+}
+
+.post-content-body p code {
+  word-break: break-all;
+}
+
+.post-content-body pre {
+  overflow-x: auto;
+  margin: 1.5em 0 3em;
+  padding: 20px;
+  max-width: 100%;
+  border: color(var(--color-base) l(-10%)) 1px solid;
+  color: #080808;
+  font-size: 1.4rem;
+  line-height: 1.5em;
+  background: #eeeeee;
+  border-radius: 5px;
+}
+
+.post-content-body pre code {
+  padding: 0;
+  font-size: inherit;
+  line-height: inherit;
+  background: transparent;
+}
+
+.post-content-body pre code :not(span) {
+  color: inherit;
+}
+
+.post-content-body .fluid-width-video-wrapper {
+  margin: 1.5em 0 3em;
+}
+
+.post-content-body hr {
+  margin: 4vw 0;
+}
+
+.post-content-body hr:after {
+  content: "";
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  display: block;
+  margin-left: -10px;
+  width: 0px;
+  height: 30px;
+  background: color(var(--color-border) l(+10%));
+  box-shadow: #000 0 0 0 1px;
+  transform: rotate(45deg);
+}
+
+.footnotes-sep {
+  margin-bottom: 30px;
+}
+
+.footnotes {
+  font-size: 1.5rem;
+}
+
+.footnotes p {
+  margin: 0;
+}
+
+.footnote-backref {
+  color: var(--color-primary) !important;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-decoration: none !important;
+  box-shadow: none !important;
+}
+
+/* Author Archive
+/* ---------------------------------------------------------- */
+
+.author-meta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+  color: color(var(--color-border) l(-20%));
+}
+
+.author-links {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.author-links a {
+  display: block;
+  margin: 0;
+  padding: 0 12px;
+  color: var(--color-base);
+  opacity: 0.4;
+}
+
+.author-links a:hover {
+  text-decoration: none;
+  opacity: 1;
+}
+
+.author-links .divider {
+  display: inline-block;
+  margin: 0 3px;
+}
+
+/* Page Template
+/* ---------------------------------------------------------- */
+
+.page-template .post-content-body h1,
+.page-template .post-content-body h2,
+.page-template .post-content-body h3 {
+  text-align: inherit;
+}
+
+/* 404 page */
+.good-bye-page { display: flex; flex-direction: column; align-items: center; }
+
+
+/* thank you page */
+.thank-you p {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+/* Image boarder */
+.kg-image { border-radius: 10px; }
+
+img.gatsby-resp-image-image { border-radius: 10px !important;}
+
+img {border-radius: 10px;}

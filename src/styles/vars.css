@@ -1,0 +1,48 @@
+/* Variables
+/* ---------------------------------------------------------- */
+
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap');
+/* @import url('../../../static/font/OldLondon.woff'); */
+
+
+
+:root {
+
+    /* Colours */
+    --color-primary: #3eb0ef;
+    --color-base: #131313;
+    --color-border: #ddd;
+    --color-bg: #ffffff;
+
+    /* Fonts */
+    --font-sans-serif: 'Futura', 'Trebuchet MS', Arial, sans-serif;
+    --font-serif: 'EB Garamond', Georgia, Times, serif;
+    --font-mono: Menlo, Courier, monospace;
+    --font-light: 100;
+    --font-normal: 400;
+    --font-bold: 700;
+    --font-heavy: 800;
+
+    /* Breakpoints */
+    --xlarge: 1680px;
+    --large: 1280px;
+    --medium: 980px;
+    --small: 740px;
+    --xsmall: 480px;
+
+    /* Sizes */
+    --height: 4rem;
+    --margin: 2rem;
+    --radius: 0.5rem;
+
+}
+
+[data-theme='dark'] {
+    --color-primary: #5ec2ff;
+    --color-base: #e0e0e0;
+    --color-border: #444;
+    --color-bg: #121212;
+
+
+    /* Old BG--color-bg: #f8f8f8;*/
+}

@@ -1,0 +1,528 @@
+---
+import '../styles/vars.css';
+import '../styles/content.css'; /* Importing remaining global content styles */
+// But wait, Astro CSS imports don't support @import inside CSS files perfectly with PostCSS sometimes unless configured.
+// Importing here ensures they are included.
+
+import { ClientRouter } from 'astro:transitions';
+
+// Migrating logic from src/components/layout.js
+export interface Props {
+	title?: string;
+    description?: string;
+    children?: any;
+}
+
+const { title, description } = Astro.props;
+
+---
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content={description || "Clay Theme"} />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title || "Clay"}</title>
+        <ClientRouter />
+        <script is:inline>
+            // Theme init
+            const theme = (() => {
+                if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+                    return localStorage.getItem('theme');
+                }
+                if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    return 'dark';
+                }
+                return 'light';
+            })();
+            if (theme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+            }
+        </script>
+	</head>
+	<body class="site-wrapper">
+		<header class="site-head">
+            <div class="site-head-container">
+                <a class="nav-burger" href="#">
+                    <div class="hamburger hamburger--collapse" aria-label="Menu" role="button" aria-controls="navigation">
+                        <div class="hamburger-box">
+                            <div class="hamburger-inner" />
+                        </div>
+                    </div>
+                </a>
+                <nav id="swup" class="site-head-left">
+                    <ul class="nav" role="menu">
+                        <li class="nav-home" role="menuitem">
+                            <a href="/">Home</a>
+                        </li>
+                        <li class="nav-home" role="menuitem">
+                            <a href="/bio">Bio</a>
+                        </li>
+                        <li class="nav-home" role="menuitem">
+                            <a href="/work">Work</a>
+                        </li>
+                        <li class="nav-home" role="menuitem">
+                            <a href="/news">News</a>
+                        </li>
+                        <li class="nav-home" role="menuitem">
+                            <a href="/contact">Contact</a>
+                        </li>
+                        <li class="nav-home" role="menuitem">
+                            <a href="/elements">Elements</a>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="site-head-center">
+                    <a class="site-head-logo" href="/">
+                        {title || "Clay"}
+                    </a>
+                </div>
+                <div class="site-head-right">
+                    <div class="social-links">
+                        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Dark Mode">
+                            <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                            <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main id="site-main" class="site-main">
+            <div id="swup" class="transition-fade">
+                <slot />
+            </div>
+        </main>
+
+        <footer class="site-foot">
+            &copy; {new Date().getFullYear()} <a href="/">Clay</a>
+        </footer>
+
+        <script>
+            import { navigate } from 'astro:transitions/client';
+
+            function initNav() {
+                const burger = document.querySelector('.nav-burger');
+                const wrapper = document.querySelector('.site-wrapper');
+                if (burger && wrapper) {
+                    burger.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        wrapper.classList.toggle('site-head-open');
+                    });
+                }
+            }
+
+            function initTheme() {
+                const toggleBtn = document.getElementById('theme-toggle');
+                const updateIcon = () => {
+                   const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                   // Add logic to animate or swap icons if needed, currently CSS handles visibility? No, added SVGs.
+                   // Simple SVG toggle:
+                   const sun = document.querySelector('.sun-icon') as HTMLElement;
+                   const moon = document.querySelector('.moon-icon') as HTMLElement;
+                   if (sun && moon) {
+                       sun.style.display = isDark ? 'inline-block' : 'none';
+                       moon.style.display = isDark ? 'none' : 'inline-block';
+                   }
+                };
+
+                updateIcon();
+
+                if (toggleBtn) {
+                   toggleBtn.addEventListener('click', () => {
+                       const currentTheme = document.documentElement.getAttribute('data-theme');
+                       const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+                       if (newTheme === 'dark') {
+                           document.documentElement.setAttribute('data-theme', 'dark');
+                       } else {
+                           document.documentElement.removeAttribute('data-theme');
+                       }
+                       localStorage.setItem('theme', newTheme);
+                       updateIcon();
+                   });
+                }
+            }
+
+            // Run on view transitions (fires on initial load too)
+            document.addEventListener('astro:page-load', () => {
+                initNav();
+                initTheme();
+            });
+
+            // Re-apply theme on swap to prevent flash?
+            // The is:inline script in head handles the initial check on reload.
+            // astro:after-swap handles verifying state after client-side nav.
+             document.addEventListener('astro:after-swap', () => {
+                const theme = localStorage.getItem('theme');
+                if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                } else {
+                     document.documentElement.removeAttribute('data-theme');
+                }
+             });
+        </script>
+
+<style is:global>
+    /* Global Styles */
+    body {
+        font-family: var(--font-serif);
+        background: var(--color-bg);
+        color: var(--color-base); /* Ensure text respects theme */
+        transition: background 0.3s ease-out, color 0.3s ease-out;
+        transition-delay: 0.25;
+        margin: 0;
+    }
+
+    .theme-toggle {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        opacity: 0.8;
+        outline: none;
+        -webkit-appearance: none;
+        appearance: none;
+        box-shadow: none;
+    }
+    .theme-toggle:focus {
+        outline: none;
+    }
+    .theme-toggle:hover {
+        opacity: 1;
+    }
+    .sun-icon {
+        color: #FFD700; /* Yellow */
+    }
+    .moon-icon {
+        color: #333; /* Gray/Black */
+    }
+    [data-theme='dark'] .moon-icon {
+        color: #eee; /* Light gray if ever visible in improper state, but mostly replacing sun */
+    }
+
+    .img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        background-position: center center;
+        background-size: cover;
+        border-radius: 100%;
+    }
+
+    .hidden {
+        visibility: hidden;
+        position: absolute;
+        text-indent: -9999px;
+    }
+
+    /* Layout */
+    .site-main {
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+    }
+
+    .site-wrapper {
+        padding: 3vw;
+        min-height: 100vh;
+        max-width: 1920px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    @media (max-width: 850px) {
+        .site-wrapper {
+            padding: 6vw;
+        }
+    }
+
+    /* Page Head */
+    .page-head {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 13vw 0;
+        max-width: 70%;
+        margin: auto;
+        text-align: center;
+    }
+
+    .page-head-title {
+        margin: 0;
+        font-size: 4.2rem;
+        color: var(--color-base);
+    }
+
+    @media (max-width: 500px) {
+        .page-head-title {
+            font-size: 2rem;
+        }
+    }
+
+    .page-head-description {
+        margin: 0 0 1.6vw;
+        color: color(var(--color-border) l(-20%));
+        font-size: 2.2rem;
+        line-height: 1.35em;
+    }
+
+    @media (max-width: 500px) {
+        .page-head-description {
+            font-size: 1.6rem;
+        }
+    }
+
+    /* Footer */
+    .site-foot {
+        font-family: var(--font-sans-serif);
+        font-weight: 300;
+        margin: 3vw 0 1vw;
+        text-align: center;
+        color: var(--color-base);
+        opacity: 0.6;
+        font-size: 1.5rem;
+    }
+
+    footer.site-foot a {
+        text-decoration: underline;
+    }
+
+    .site-foot a {
+        color: var(--color-base);
+    }
+
+    /* Site Navigation */
+    .site-head {
+        position: relative;
+        z-index: 300;
+        margin-top: -10px;
+        font-size: 1.35rem;
+    }
+
+    .site-head-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 0 1rem;
+    }
+
+    .site-head-left {
+        position: relative;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        margin-right: 10px;
+        white-space: nowrap;
+    }
+
+    .nav {
+        display: flex;
+        margin: 0 0 0 -12px;
+        padding: 0;
+        list-style: none;
+    }
+
+    .site-head li {
+        display: block;
+        margin: 0;
+        padding: 0;
+    }
+
+    .site-head-left a,
+    .site-head-right a {
+        display: block;
+        margin: 0;
+        padding: 10px 12px;
+        color: var(--color-base);
+        font-family: var(--font-sans-serif);
+        font-weight: 400;
+        font-size: 1.8rem; /* Increased size again */
+        text-transform: lowercase;
+        font-variant: small-caps;
+        letter-spacing: 1px;
+        opacity: 0.6;
+    }
+
+    .nav-current a,
+    .site-head a:hover {
+        text-decoration: none;
+        opacity: 1;
+    }
+
+    .site-head-center {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .site-head-logo {
+        font-family: var(--font-sans-serif);
+        flex-shrink: 0;
+        display: block;
+        padding: 10px;
+        color: var(--color-base);
+        font-size: 3rem;
+        line-height: 1em;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+    }
+
+    .site-head-logo:hover {
+        text-decoration: none;
+    }
+
+    .site-head-logo img {
+        display: block;
+        margin-top: 2px;
+        width: auto;
+        height: 28px;
+    }
+
+    .site-head-right {
+        position: relative;
+        z-index: 100;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+    }
+
+    .social-links {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+    }
+
+    /* Mobile Nav */
+    .nav-burger {
+        display: none;
+        position: absolute;
+        left: 0;
+        z-index: 9999;
+        padding: 12px 12px 12px 12px;
+    }
+
+    @media (max-width: 850px) {
+        .site-head {
+            padding: 0;
+        }
+        .nav-burger {
+            display: block;
+        }
+        .site-head-container {
+            flex-direction: column;
+            justify-content: flex-start;
+            height: 40px;
+            background: rgba(255, 255, 255, 0);
+            z-index: -1;
+            transition: all 0.4s ease-out;
+            overflow: hidden;
+        }
+        .site-head-left,
+        .site-head-right {
+            position: relative;
+            z-index: -1;
+            height: auto;
+            transition: height 0.2s cubic-bezier(0.4, 0.01, 0.165, 0.99);
+            transition-delay: 1s;
+        }
+        .site-head-left a,
+        .site-head-right a {
+            margin: 8px 0;
+            padding: 1px 0;
+            font-size: 2.6rem;
+            line-height: 1.15em;
+            font-weight: 200;
+            opacity: 0;
+            transition: transform 0.3s cubic-bezier(0.4, 0.01, 0.165, 0.99),
+            opacity 0.2s cubic-bezier(0.4, 0.01, 0.165, 0.99);
+            transform: scale(1.1) translateY(-25px);
+        }
+        .site-head-right a {
+            padding: 5px 0;
+            margin: 1px 0;
+            font-size: 2rem;
+        }
+        .nav {
+            width: 100%;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            margin: 3vw 0 0 0;
+        }
+        .site-head-left {
+            order: 2;
+            margin: 0;
+            width: 100%;
+        }
+        .site-head-center {
+            order: 1;
+            position: static;
+            z-index: auto;
+            display: flex;
+            justify-content: center;
+        }
+        .site-head-right {
+            order: 3;
+            width: 100%;
+            margin-top: 3vw;
+        }
+        .social-links {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .site-head-open {
+            background: rgba(255, 255, 255, 1);
+            transition: background 0.5s ease-out;
+            transition-delay: 0.25;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .site-head-open .site-head-container {
+            height: 100vh;
+            transition: height 0.2s ease-in;
+        }
+
+        .site-head-open .site-head-left,
+        .site-head-open .site-head-right {
+            z-index: 9999;
+            height: auto;
+            transition: height 0.2s cubic-bezier(0.4, 0.01, 0.165, 0.99);
+        }
+
+        .site-head-open .site-head-left a,
+        .site-head-open .site-head-right a {
+            opacity: 1;
+            transition: transform 0.6s cubic-bezier(0.4, 0.01, 0.165, 0.99),
+            opacity 0.9s cubic-bezier(0.4, 0.01, 0.165, 0.99);
+            transform: scale(1) translateY(0px);
+        }
+        .site-head-open .nav-current a {
+            border-bottom: var(--color-base) 2px solid;
+        }
+        .site-head-open .site-head-right a {
+            opacity: 0.5;
+        }
+        .site-head-open .site-foot {
+            display: block;
+            position: fixed;
+            z-index: 9999;
+            bottom: 0;
+            transition: transform 0.3s cubic-bezier(0.4, 0.01, 0.165, 0.99);
+            transform: translateY(-4vw);
+        }
+    }
+</style>
+	</body>
+</html>
